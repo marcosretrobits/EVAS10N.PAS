@@ -80,7 +80,7 @@ procedure Help;
     Writeln('  EVAS10N [DELAY]');
     Writeln('  DELAY: game loop iteration delay (ms; default: 800)');
     Writeln;
-    Writeln('Conrol keys:');
+    Writeln('Control keys:');
     Writeln('  q:         quit');
     Writeln('  z:         move bat left');
     Writeln('  x:         move bat right');
@@ -245,4 +245,4 @@ begin
     until exit or (balls = 0);
   until exit;
   Help;
-end.
+end.
