@@ -18,19 +18,21 @@ program Evas10n;
 }
 
 const
+{
   BallChar: Char = '@';
   BatChars: String[3] = '***';
   BrickChar : Char = '#';
-{
+}
+
   BallChar: Char = ' ';
   BatChars: String[3] = '   ';
   BrickChar : Char = '_';
-}
+
 
 var
   del, code, bat, batDir, balls, v, w, x, y: Integer;
   bricks: array[3..8] of array[1..32] of Boolean;
-  altChars, exit, lostBall: Boolean;
+  exit, lostBall: Boolean;
   ch: Char;
   param: String[5];
 
@@ -90,14 +92,15 @@ procedure Help;
     Writeln('a BASIC 10-Liner breakout game for the ZX Spectrum.');
     Writeln;
     Writeln('Synopsis:');
-    Writeln('  EVAS10N [DELAY]');
-    Writeln('  DELAY: game loop iteration delay (ms; default: 800)');
+    Writeln(' EVAS10N [DELAY]');
+    Writeln(' DELAY: game loop iteration delay in milliseconds.');
+    Writeln('        Default: 800 (assuming 28MHz CPU)');
     Writeln;
     Writeln('Control keys:');
-    Writeln('  q:         quit');
-    Writeln('  z:         move bat left');
-    Writeln('  x:         move bat right');
-    Writeln('  any other: stop bat');
+    Writeln(' q:         quit');
+    Writeln(' z:         move bat left');
+    Writeln(' x:         move bat right');
+    Writeln(' any other: stop bat');
     Writeln;
     Writeln('Marco''s Retrobits');
     Writeln('https://retrobits.altervista.org');
@@ -127,8 +130,7 @@ procedure Init;
   end;
 
 begin
-  altChars := False;
-  del := 800;
+  del := 800; { 28 MHz assumed }
   if (ParamCount > 0) then
     begin
       param := ParamStr(1);
@@ -259,4 +261,4 @@ begin
     until exit or (balls = 0);
   until exit;
   Help;
-end.
+end.
