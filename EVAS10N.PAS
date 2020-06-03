@@ -2,7 +2,7 @@ program Evas10n;
 {$C-}
 
 {
-  EVAS10N.PAS 1.0
+  EVAS10N.PAS 1.1
 
   A Turbo Pascal rewrite of Evas10n,
   a BASIC 10-Liner breakout game for the ZX Spectrum.
@@ -11,13 +11,26 @@ program Evas10n;
   https://retrobits.altervista.org
   https://retrobits.itch.io
 
+  2020.06.04 Version 1.1:
+             * show bales-1
+             * constants for ball, bat and brick characters
   2020.06.02 First release
+}
+
+const
+  BallChar: Char = '@';
+  BatChars: String[3] = '***';
+  BrickChar : Char = '#';
+{
+  BallChar: Char = ' ';
+  BatChars: String[3] = '   ';
+  BrickChar : Char = '_';
 }
 
 var
   del, code, bat, batDir, balls, v, w, x, y: Integer;
   bricks: array[3..8] of array[1..32] of Boolean;
-  exit, lostBall: Boolean;
+  altChars, exit, lostBall: Boolean;
   ch: Char;
   param: String[5];
 
@@ -30,7 +43,7 @@ procedure WriteBricks;
       for c := 1 to 32 do
         begin
           GotoXY(c,r);
-          Write('_');
+          Write(BrickChar);
         end;
     NormVideo;
   end;
@@ -39,7 +52,7 @@ procedure WriteBat;
   begin
     LowVideo;
     GotoXY(bat, 22);
-    Write('   ');
+    Write(BatChars);
     NormVideo;
     GotoXY(1, 1);
   end;
@@ -56,7 +69,7 @@ procedure WriteBall;
   begin
     LowVideo;
     GotoXY(x, y);
-    Write(' ');
+    Write(BallChar);
     NormVideo;
     GotoXY(1, 1);
   end;
@@ -71,7 +84,7 @@ procedure DeleteBall;
 procedure Help;
   begin
     ClrScr;
-    Writeln('EVAS10N.PAS v. 1.0');
+    Writeln('EVAS10N.PAS v. 1.1');
     Writeln;
     Writeln('A Turbo Pascal rewrite of Evas10n,');
     Writeln('a BASIC 10-Liner breakout game for the ZX Spectrum.');
@@ -109,15 +122,16 @@ procedure Init;
           bricks[r, c] := true;
         end;
     WriteBricks;
-    GotoXY(5, 24);
-    Write('Evas10n by Marco V. 2020');
+    GotoXY(3, 24);
+    Write('EVAS10N.PAS by Marco V. 2020');
   end;
 
 begin
+  altChars := False;
   del := 800;
   if (ParamCount > 0) then
     begin
-      param:= ParamStr(1);
+      param := ParamStr(1);
       Val(param, del, code);
       if (code <> 0) then
         begin
@@ -133,7 +147,7 @@ begin
       y := 21;
       WriteBat;
       GotoXY(1, 24);
-      Write(balls);
+      Write(balls-1);
       lostBall := False;
       repeat
         Delay(del);
@@ -245,4 +259,4 @@ begin
     until exit or (balls = 0);
   until exit;
   Help;
-end.
+end.
