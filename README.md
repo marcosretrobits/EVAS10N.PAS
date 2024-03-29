@@ -7,4 +7,4 @@ Files:
 * EVAS10N.COM: CP/M EVAS10N.PAS binary (compiled with Turbo Pascal 3.01A on the ZX Spectrum Next assuming 28MHz CPU)
 * EVAS10N.EXE: DOS EVAS10N.PAS binary (compiled with Turbo Pascal 5.5 on DOSBox)
 
-Note: to compile on DOS with Turbo Pascal 5.5, replace "{$C-}" directive with "uses Crt, Turbo3;".
+Note: to compile on DOS with Turbo Pascal 5.5, replace the "{$C-}" directive with "uses Crt, Turbo3;".
