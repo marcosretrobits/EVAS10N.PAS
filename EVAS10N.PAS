@@ -2,7 +2,7 @@ program Evas10n;
 {$C-}
 
 {
-  EVAS10N.PAS 1.1
+  EVAS10N.PAS 1.2
 
   A Turbo Pascal rewrite of Evas10n,
   a BASIC 10-Liner breakout game for the ZX Spectrum.
@@ -11,8 +11,10 @@ program Evas10n;
   https://retrobits.altervista.org
   https://retrobits.itch.io
 
+  2024.03.29 Version 1.2:
+			 * configurable width
   2020.06.04 Version 1.1:
-             * show bales-1
+             * show balls-1
              * constants for ball, bat and brick characters
   2020.06.02 First release
 }
@@ -28,10 +30,11 @@ const
   BatChars: String[3] = '   ';
   BrickChar : Char = '_';
 
+  DefaultWidth: Integer = 32;
 
 var
-  del, code, bat, batDir, balls, v, w, x, y: Integer;
-  bricks: array[3..8] of array[1..32] of Boolean;
+  del, code, bat, batDir, balls, v, w, x, y, width: Integer;
+  bricks: array[3..8] of array[1..80] of Boolean;
   exit, lostBall: Boolean;
   ch: Char;
   param: String[5];
@@ -42,7 +45,7 @@ procedure WriteBricks;
   begin
     LowVideo;
     for r := 3 to 8 do
-      for c := 1 to 32 do
+      for c := 1 to width do
         begin
           GotoXY(c,r);
           Write(BrickChar);
@@ -86,15 +89,17 @@ procedure DeleteBall;
 procedure Help;
   begin
     ClrScr;
-    Writeln('EVAS10N.PAS v. 1.1');
+    Writeln('EVAS10N.PAS v. 1.2');
     Writeln;
     Writeln('A Turbo Pascal rewrite of Evas10n,');
     Writeln('a BASIC 10-Liner breakout game for the ZX Spectrum.');
     Writeln;
     Writeln('Synopsis:');
-    Writeln(' EVAS10N [DELAY]');
-    Writeln(' DELAY: game loop iteration delay in milliseconds.');
+    Writeln(' EVAS10N [DELAY] [WIDTH]');
+    Writeln(' DELAY: game loop iteration delay in milliseconds');
     Writeln('        Default: 800 (assuming 28MHz CPU)');
+    Writeln(' WIDTH: game area width (columns number)');
+    Writeln('        Default: 32 (>= 32 and <= 80)');
     Writeln;
     Writeln('Control keys:');
     Writeln(' q:         quit');
@@ -120,13 +125,13 @@ procedure Init;
     exit := False;
     ClrScr;
     for r := 3 to 8 do
-      for c := 1 to 32 do
+      for c := 1 to width do
         begin
           bricks[r, c] := true;
         end;
     WriteBricks;
     GotoXY(3, 24);
-    Write('EVAS10N.PAS by Marco V. 2020');
+    Write('EVAS10N.PAS by Marco V. 2020-24');
   end;
 
 begin
@@ -136,6 +141,17 @@ begin
       param := ParamStr(1);
       Val(param, del, code);
       if (code <> 0) then
+        begin
+          Help;
+          Halt;
+        end;
+    end;
+  width := 32;
+  if (ParamCount > 1) then
+    begin
+      param := ParamStr(2);
+      Val(param, width, code);
+      if ((width < 32) or (width > 80)) then
         begin
           Help;
           Halt;
@@ -169,7 +185,7 @@ begin
           else batDir := 0;
         end;
         DeleteBat;
-        if ((batDir = 1) and (bat < 30)) or
+        if ((batDir = 1) and (bat < (width - 2))) or
            ((batDir = -1) and (bat > 1)) then
           bat := bat + batDir;
         WriteBat;
@@ -214,7 +230,7 @@ begin
           begin
             if (y >= 3) and (y <= 8) then
               bricks[y, x] := false;
-            if (x > 1) and (x < 32) and (y >= 3) and (y <= 8)
+            if (x > 1) and (x < width) and (y >= 3) and (y <= 8)
             and (bricks[y, x + v]) then
               begin
                 bricks[y, x + v] := False;
@@ -254,7 +270,7 @@ begin
                 repeat until keypressed;
                 exit := True;
               end;
-            if (x = 1) or (x = 32) then
+            if (x = 1) or (x = width) then
               v := -v;
           end;
       until exit or lostBall;
